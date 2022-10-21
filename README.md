@@ -13,7 +13,7 @@ The following tools are used:
 
 The starter code of the repository was originally forked from a project in the Udacity repository [build-ml-pipeline-for-short-term-rental-prices](https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices). The instructions of that source project can be found in the file [`Instructions.md`](Instructions.md). If you would like to know more about *why* reproducible ML pipelines matter and *how* the tools used here interact, you can have a look at my [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
 
-The used dataset is a ...
+The used dataset is a modified [AirBnB dataset for New York City](http://insideairbnb.com/get-the-data/), which is in the source [forked repository](https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices/tree/main/components/get_data/data). AirBnB has a [data dictionary](https://docs.google.com/spreadsheets/d/1iWCNJcSutYqpULSQHlNyGInUvHg2BoUGoNRIGa6Szc4/edit#gid=1322284596) which explains each feature. A subset of 15 independent variables has has been taken.
 
 Table of contents:
 
@@ -45,6 +45,7 @@ Table of contents:
 - This repository doesn't focus on the techniques for data processing and modeling; if you are interested in those topics, you can visit my  [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
 - This project creates an inference pipeline managed with [MLflow](https://www.mlflow.org) and tracked with [Weights and Biases](https://wandb.ai/site); however, it is possible to define a production inference pipeline in a more simple way without the exposure to those 3rd party tools. In [this blog post](https://mikelsagardia.io/blog/machine-learning-production-level.html) I describe how to perform that transformation from research code to production-level code; the associated repository is [customer_churn_production](https://github.com/mxagar/customer_churn_production).
 - If you are interested in more MLOps-related content, you can visit my notes on the [Udacity Machine Learning DevOps Engineering Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821): [mlops_udacity](https://github.com/mxagar/mlops_udacity).
+- If you're interested in such short-term renting price modeling, have a look at my [Analysis and Modelling of the AirBnB Dataset from the Basque Country](https://mikelsagardia.io/blog/airbnb-spain-basque-data-analysis.html).
 - [Weights and Biases tutorials](https://wandb.ai/site/tutorials).
 - [Weights and Biases documentation](https://docs.wandb.ai/).
 
