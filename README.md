@@ -22,11 +22,22 @@ Table of contents:
   - [How to Use This Project](#how-to-use-this-project)
   - [Dependencies](#dependencies)
   - [Notes](#notes)
+  - [Tips & Tricks](#tips--tricks)
   - [Possible Improvements](#possible-improvements)
   - [Interesting Links](#interesting-links)
   - [Authorship](#authorship)
 
 ## Introduction
+
+Contents:
+
+    conda env create
+    cookiecutter
+    single steps/components
+    pre-existing components run from github
+    eda: env changed due to version errors
+
+Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
 
 ## How to Use This Project
 
@@ -36,6 +47,10 @@ Table of contents:
 ## Dependencies
 
 ## Notes
+
+## Tips & Tricks
+
+- I changed the remote component folder/URL; additionally, we might need to specify the branch with the parameter `version` in the `mlflow.run()` call, because `mlflow` defaults to use `master`.
 
 ## Possible Improvements
 
