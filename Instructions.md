@@ -8,28 +8,32 @@ In this project you will build such a pipeline.
 
 ## Table of contents
 
-- [Introduction](#build-an-ML-Pipeline-for-Short-Term-Rental-Prices-in-NYC)
-- [Preliminary steps](#preliminary-steps)
-  * [Fork the Starter Kit](#fork-the-starter-kit)
-  * [Create environment](#create-environment)
-  * [Get API key for Weights and Biases](#get-api-key-for-weights-and-biases)
-  * [Cookie cutter](#cookie-cutter)
-  * [The configuration](#the-configuration)
-  * [Running the entire pipeline or just a selection of steps](#Running-the-entire-pipeline-or-just-a-selection-of-steps)
-  * [Pre-existing components](#pre-existing-components)
-- [Instructions](#instructions)
-  * [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-  * [Data cleaning](#data-cleaning)
-  * [Data testing](#data-testing)
-  * [Data splitting](#data-splitting)
-  * [Train Random Forest](#train-random-forest)
-  * [Optimize hyperparameters](#optimize-hyperparameters)
-  * [Select the best model](#select-the-best-model)
-  * [Test](#test)
-  * [Visualize the pipeline](#visualize-the-pipeline)
-  * [Release the pipeline](#release-the-pipeline)
-  * [Train the model on a new data sample](#train-the-model-on-a-new-data-sample)
-- [Cleaning up](#cleaning-up)
+- [Build an ML Pipeline for Short-Term Rental Prices in NYC](#build-an-ml-pipeline-for-short-term-rental-prices-in-nyc)
+  - [Table of contents](#table-of-contents)
+  - [Preliminary steps](#preliminary-steps)
+    - [Fork the Starter kit](#fork-the-starter-kit)
+    - [Create environment](#create-environment)
+    - [Get API key for Weights and Biases](#get-api-key-for-weights-and-biases)
+    - [Cookie cutter](#cookie-cutter)
+    - [The configuration](#the-configuration)
+    - [Running the entire pipeline or just a selection of steps](#running-the-entire-pipeline-or-just-a-selection-of-steps)
+    - [Pre-existing components](#pre-existing-components)
+  - [In case of errors](#in-case-of-errors)
+  - [Instructions](#instructions)
+    - [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
+  - [Data cleaning](#data-cleaning)
+    - [Data testing](#data-testing)
+    - [Data splitting](#data-splitting)
+    - [Train Random Forest](#train-random-forest)
+    - [Optimize hyperparameters](#optimize-hyperparameters)
+    - [Select the best model](#select-the-best-model)
+    - [Test](#test)
+    - [Visualize the pipeline](#visualize-the-pipeline)
+    - [Release the pipeline](#release-the-pipeline)
+    - [Train the model on a new data sample](#train-the-model-on-a-new-data-sample)
+  - [Submission](#submission)
+    - [Requirements](#requirements)
+  - [License](#license)
 
 ## Preliminary steps
 ### Fork the Starter kit
@@ -563,6 +567,62 @@ This will drop rows in the dataset that are not in the proper geolocation.
 Then commit your change, make a new release (for example ``1.0.1``) and retry (of course you need to use 
 ``-v 1.0.1`` when calling mlflow this time). Now the run should succeed and voit la', 
 you have trained your new model on the new data.
+
+## Submission
+
+### Requirements
+
+Requirements from the Udacity [rubric](https://review.udacity.com/#!/rubrics/3219/view):
+
+
+- Make W&B project public; add link to the `README.md`.
+- Clone/fork the original repository and make it public; add link to the `README.md`.
+- EDA: `src/eda`
+  - Get sample dataset to W&B.
+  - Use EDA notebook.
+  - Fetch dataset to notebook.
+  - Implement what is in the `notes.md`: clean the data.
+- Data cleaning:
+  - Create the `basic_cleaning` component/step with correct files & input params.
+  - Update `conda.yaml`.
+  - Update params + docstrings.
+  - Implement the data cleaning from the EDA.
+  - Use the parameter values from `config.yaml`
+  - Run `basic_cleaning` without errors.
+  - Upload `clean_data.csv` to W&B.
+- Data testing:
+  - Create "reference" tag for latest version of `clean_data.csv`.
+  - Implement `test_row_count()` and `test_price_range()`.
+  - Pipeline runs after this step.
+- Data splitting:
+  - Add component `train_val_test_split` to `main.py`.
+  - Run pipeline and upload 2 new artifacts to W&B: `trainval_data.csv, test_data.csv`.
+- Train the random forest:
+  - Complete `src/train_random_forest/run.py`:
+    - Download data.
+    - Implement `get_inference_pipeline()`.
+    - Fit the pipeline.
+    - Export the pipeline.
+    - Upload pipeline to W&B.
+    - Log MAE to W&B.
+  - Complete pipeline runs successfully.
+  - There should be a `model_export` artifact in W&B.
+- Optimize hyperparameters: W&B should have several training jobs run with hydra sweeps.
+- Select best model: add tag "prod" to model with best MAE.
+- Test set verification: implement `test_regression_model()` in `main.py` and verify that the performance is comparable to the one with the validation split.
+- Visualize the pipeline in W&B with the graph view.
+- Release the pipeline on Github.
+- Train the model on the new data sample:
+   - The first release should fail due to a data problem in `sample2.csv`.
+   - Implement new cleaning step in `basic_cleaning`.
+   - Create new release.
+   - Re-run and create a new model.
+
+Suggestions:
+
+- Extend EDA.
+- Try other models than the random forest; create new components/steps.
+- Add possible improvements to the `README.md`.
 
 ## License
 
