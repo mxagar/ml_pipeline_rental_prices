@@ -36,7 +36,8 @@ Contents:
     cookiecutter
     single steps/components
     pre-existing components run from github
-    eda: env changed due to version errors
+      get_data
+      train_cal_test_split
 
 Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
 
