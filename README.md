@@ -23,6 +23,7 @@ Table of contents:
   - [Dependencies](#dependencies)
   - [Notes](#notes)
   - [Tips & Tricks](#tips--tricks)
+    - [Issues](#issues)
   - [Possible Improvements](#possible-improvements)
   - [Interesting Links](#interesting-links)
   - [Authorship](#authorship)
@@ -50,7 +51,10 @@ Note that the data processing and modeling are quite simple; the focus of the pr
 
 ## Tips & Tricks
 
+### Issues
+
 - I changed the remote component folder/URL; additionally, we might need to specify the branch with the parameter `version` in the `mlflow.run()` call, because `mlflow` defaults to use `master`.
+- I had to change several `conda.yaml` files to avoid versioning/dependency issues; protobuf, pyarrow, etc.
 
 ## Possible Improvements
 
