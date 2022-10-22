@@ -6,27 +6,27 @@ entry_points:
     parameters:
 
       input_artifact:
-        description: ## ADD DESCRIPTION
+        description: Input artifact, i.e., raw dataset
         type: string
 
       output_artifact:
-        description: ## ADD DESCRIPTION
+        description: Output artifact, i.e., clean dataset
         type: string
 
       output_type:
-        description: ## ADD DESCRIPTION
+        description: Type of output artifact, i.e. clean dataset
         type: string
 
       output_description:
-        description: ## ADD DESCRIPTION
+        description: Description line related to the output artifact
         type: string
 
       min_price:
-        description: ## ADD DESCRIPTION
+        description: Minimum allowed price in the dataset
         type: string
 
       max_price:
-        description: ## ADD DESCRIPTION
+        description: Maximum allowed price in the dataset
         type: string
 
 
