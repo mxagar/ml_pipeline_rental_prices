@@ -36,7 +36,7 @@ def go(config: DictConfig):
     with tempfile.TemporaryDirectory() as tmp_dir:
 
         if "download" in active_steps:
-            # Download file and load in W&B
+            # mlflow run . -P steps="download"
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/get_data",
                 "main",
@@ -50,6 +50,7 @@ def go(config: DictConfig):
             )
 
         if "basic_cleaning" in active_steps:
+            # mlflow run . -P steps="basic_cleaning"
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "basic_cleaning"),
                 "main",
@@ -64,6 +65,7 @@ def go(config: DictConfig):
             )
 
         if "data_check" in active_steps:
+            # mlflow run . -P steps="data_check"
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
                 "main",
@@ -77,10 +79,18 @@ def go(config: DictConfig):
             )
 
         if "data_split" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            # mlflow run . -P steps="data_split"
+            _ = mlflow.run(
+                f"{config['main']['components_repository']}/train_val_test_split",
+                "main",
+                version="main",
+                parameters={
+                    "input": "clean_sample.csv:latest",
+                    "test_size": config['modeling']['test_size'],
+                    "random_seed": config['modeling']['random_seed'],
+                    "stratify_by": config['modeling']['stratify_by']
+                }
+            )
 
         if "train_random_forest" in active_steps:
 
