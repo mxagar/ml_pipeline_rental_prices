@@ -37,9 +37,12 @@ Contents:
     single steps/components
     pre-existing components run from github
       get_data
-      train_cal_test_split
+      train_val_test_split
+      test_regression_model
 
 Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
+
+![Lineage / Graph View of the exported model](images/wandb_graph_view_lineage.png)
 
 ## How to Use This Project
 
