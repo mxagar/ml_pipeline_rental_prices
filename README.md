@@ -65,49 +65,51 @@ mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
 ├── LICENSE.txt
 ├── images/                         # Markdown assets
 │   └── ...
+├── cookie-mlflow-step/             # Template for (empty) step generation
+│   └── ...
 ├── components/                     # Remote components
 │   ├── README.md
 │   ├── conda.yml
-│   ├── get_data/
-│   │   ├── MLproject
-│   │   ├── conda.yml
-│   │   ├── data/
+│   ├── get_data/                   # Download/get data step/component
+│   │   ├── MLproject               # MLflow project file
+│   │   ├── conda.yml               # Environment for step
+│   │   ├── data/                   # Dataset samples (retrieved with URL)
 │   │   │   ├── sample1.csv
 │   │   │   └── sample2.csv
-│   │   └── run.py
-│   ├── test_regression_model/
+│   │   └── run.py                  # Step implementation
+│   ├── test_regression_model/      # Evaluation step/components
 │   │   ├── MLproject
 │   │   ├── conda.yml
 │   │   └── run.py
-│   └── train_val_test_split/
+│   └── train_val_test_split/       # Segregation step/component
 │       ├── MLproject
 │       ├── conda.yml
 │       └── run.py
-├── cookie-mlflow-step/             # Template for (empty) step generation
-│   └── ...
 └── src/                            # Local components
-│   ├── README.md
-    ├── basic_cleaning/             # Cleaning step
+    ├── README.md
+    ├── basic_cleaning/             # Cleaning step/component
     │   ├── MLproject               # MLflow project file
     │   ├── conda.yml               # Environment for step
     │   └── run.py                  # Step implementation
-    ├── data_check/
+    ├── data_check/                 # Non-/Deterministic tests step/component
     │   ├── MLproject
     │   ├── conda.yml
     │   ├── conftest.py
     │   └── test_data.py
-    ├── eda/
-    │   ├── EDA.ipynb
+    ├── eda/                        # Exploratory Data Analysis & Modeling (research env.)
+    │   ├── EDA.ipynb               # Basic EDA notebook
     │   ├── MLproject
-    │   ├── Modeling.ipynb
+    │   ├── Modeling.ipynb          # Modeling trials, transferred to train_random_forest
     │   └── conda.yml
-    └── train_random_forest/
+    └── train_random_forest/        # Inference pipeline
         ├── MLproject
         ├── conda.yml
-        ├── feature_engineering.py  #
+        ├── feature_engineering.py
         └── run.py
 
 ```
+
+![Reproducible ML Pipeline Diagram](images/Reproducible_Pipeline_AirBnB_NYC.png)
 
 ## How to Use This Project
 
