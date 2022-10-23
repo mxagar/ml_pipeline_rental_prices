@@ -44,6 +44,12 @@ Note that the data processing and modeling are quite simple; the focus of the pr
 
 ![Lineage / Graph View of the exported model](images/wandb_graph_view_lineage.png)
 
+```bash
+mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
+-v 1.0.0 \
+-P hydra_options="etl.sample='sample2.csv'"
+```
+
 ## How to Use This Project
 
 - [`Instructions.md`](Instructions.md)
