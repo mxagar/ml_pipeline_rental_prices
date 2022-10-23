@@ -1,6 +1,6 @@
 # Reproducible Machine Learning Pipeline for Short-Term Rental Price Prediction
 
-This repository contains a Machine Learning (ML) pipeline which is able to predict short-term rental property prices in New York City. The pipeline is designed to the retrained easily with new data that comes frequently in bulk, assuming that prices (and thus, the model) vary constantly. The pipeline is divided into the typical steps or components in an ML training pipeline, carried out in order, and explained in the section [Introduction](#introduction).
+This repository contains a Machine Learning (ML) pipeline which is able to predict short-term rental property prices in New York City. The pipeline is designed to be retrained easily with new data that comes frequently in bulk, assuming that prices (and thus, the model) vary constantly. The pipeline is divided into the typical steps or components in an ML training pipeline, carried out in order, and explained in the section [Introduction](#introduction).
 
 The following tools are used:
 
@@ -10,6 +10,8 @@ The following tools are used:
 - [Conda](https://docs.conda.io/en/latest/) for environment management.
 - [Pandas](https://pandas.pydata.org) for data analysis.
 - [Scikit-Learn](https://scikit-learn.org/stable/) for data modeling.
+
+The tracked **project in Weights & Biases can be found here: [nyc_airbnb](https://wandb.ai/datamix-ai/nyc_airbnb)**.
 
 The starter code of the repository was originally forked from a project in the Udacity repository [build-ml-pipeline-for-short-term-rental-prices](https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices). The instructions of that source project can be found in the file [`Instructions.md`](Instructions.md). If you would like to know more about *why* reproducible ML pipelines matter and *how* the tools used here interact, you can have a look at my [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
 
@@ -50,6 +52,63 @@ mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
 -P hydra_options="etl.sample='sample2.csv'"
 ```
 
+
+```
+.
+├── README.md                       # This file
+├── MLproject                       # High-level pipeline project
+├── main.py                         # Pipeline main file
+├── environment.yml                 # Environment to run the project
+├── conda.yml                       # Environment of main pipeline
+├── config.yaml                     # Configuration of pipeline
+├── Instructions.md                 # Original instructions by Udacity
+├── LICENSE.txt
+├── images/                         # Markdown assets
+│   └── ...
+├── components/                     # Remote components
+│   ├── README.md
+│   ├── conda.yml
+│   ├── get_data/
+│   │   ├── MLproject
+│   │   ├── conda.yml
+│   │   ├── data/
+│   │   │   ├── sample1.csv
+│   │   │   └── sample2.csv
+│   │   └── run.py
+│   ├── test_regression_model/
+│   │   ├── MLproject
+│   │   ├── conda.yml
+│   │   └── run.py
+│   └── train_val_test_split/
+│       ├── MLproject
+│       ├── conda.yml
+│       └── run.py
+├── cookie-mlflow-step/             # Template for (empty) step generation
+│   └── ...
+└── src/                            # Local components
+│   ├── README.md
+    ├── basic_cleaning/             # Cleaning step
+    │   ├── MLproject               # MLflow project file
+    │   ├── conda.yml               # Environment for step
+    │   └── run.py                  # Step implementation
+    ├── data_check/
+    │   ├── MLproject
+    │   ├── conda.yml
+    │   ├── conftest.py
+    │   └── test_data.py
+    ├── eda/
+    │   ├── EDA.ipynb
+    │   ├── MLproject
+    │   ├── Modeling.ipynb
+    │   └── conda.yml
+    └── train_random_forest/
+        ├── MLproject
+        ├── conda.yml
+        ├── feature_engineering.py  #
+        └── run.py
+
+```
+
 ## How to Use This Project
 
 - [`Instructions.md`](Instructions.md)
@@ -64,13 +123,13 @@ mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
 ### Issues
 
 - I changed the remote component folder/URL; additionally, we might need to specify the branch with the parameter `version` in the `mlflow.run()` call, because `mlflow` defaults to use `master`.
-- I had to change several `conda.yaml` files to avoid versioning/dependency issues; protobuf, pyarrow, etc.
+- I had to change several `conda.yaml` files to avoid versioning/dependency issues: `protobuf`, etc.
 
 ## Possible Improvements
 
 ## Interesting Links
 
-- [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
+- [Reproducible ML pipeline boilerplate](https://github.com/mxagar/music_genre_classification).
 - This repository doesn't focus on the techniques for data processing and modeling; if you are interested in those topics, you can visit my  [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
 - This project creates an inference pipeline managed with [MLflow](https://www.mlflow.org) and tracked with [Weights and Biases](https://wandb.ai/site); however, it is possible to define a production inference pipeline in a more simple way without the exposure to those 3rd party tools. In [this blog post](https://mikelsagardia.io/blog/machine-learning-production-level.html) I describe how to perform that transformation from research code to production-level code; the associated repository is [customer_churn_production](https://github.com/mxagar/customer_churn_production).
 - If you are interested in more MLOps-related content, you can visit my notes on the [Udacity Machine Learning DevOps Engineering Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821): [mlops_udacity](https://github.com/mxagar/mlops_udacity).
