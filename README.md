@@ -249,6 +249,8 @@ There are some deviations from the original [`Instructions.md`](Instructions.md)
 ## Interesting Links
 
 - [Reproducible ML pipeline boilerplate](https://github.com/mxagar/music_genre_classification).
+- [Weights & Biases Model Registry](https://docs.wandb.ai/guides/models).
+- [Machine learning model serving for newbies with MLflow](https://towardsdatascience.com/machine-learning-model-serving-for-newbies-with-mlflow-76f9f0ac3cb2).
 - This repository doesn't focus on the techniques for data processing and modeling, instead it focuses on the MLOps aspect; if you are interested in the former topics, you can visit my  [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
 - This project creates an inference pipeline managed with [MLflow](https://www.mlflow.org) and tracked with [Weights and Biases](https://wandb.ai/site); however, it is possible to define a production inference pipeline in a more simple way without the exposure to those 3rd party tools. In [this blog post](https://mikelsagardia.io/blog/machine-learning-production-level.html) I describe how to perform that transformation from research code to production-level code; the associated repository is [customer_churn_production](https://github.com/mxagar/customer_churn_production).
 - If you are interested in more MLOps-related content, you can visit my notes on the [Udacity Machine Learning DevOps Engineering Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821): [mlops_udacity](https://github.com/mxagar/mlops_udacity).
