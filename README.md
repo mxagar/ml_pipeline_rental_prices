@@ -1,6 +1,6 @@
 # Reproducible Machine Learning Pipeline for Short-Term Rental Price Prediction
 
-This repository contains a Machine Learning (ML) pipeline which is able to predict short-term rental property prices in New York City. The pipeline is designed to be retrained easily with new data that comes frequently in bulk, assuming that prices (and thus, the model) vary constantly. The pipeline is divided into the typical steps or components in an ML training pipeline, carried out in order, and explained in the section [Introduction](#introduction).
+This repository contains a Machine Learning (ML) pipeline which is able to predict short-term rental property prices in New York City. It is designed to be retrained easily with new data that comes frequently in bulk, assuming that prices (and thus, the model) vary constantly. The pipeline is composed by the typical steps or components from short/medium-size projects; these are explained in the section [Introduction](#introduction).
 
 The following tools are used:
 
@@ -11,7 +11,7 @@ The following tools are used:
 - [Pandas](https://pandas.pydata.org) for data analysis.
 - [Scikit-Learn](https://scikit-learn.org/stable/) for data modeling.
 
-The tracked **project in Weights & Biases can be found here: [nyc_airbnb](https://wandb.ai/datamix-ai/nyc_airbnb)**.
+The **Weights & Biases project which collects the tracked experiments can be found here: [nyc_airbnb](https://wandb.ai/datamix-ai/nyc_airbnb)**.
 
 The starter code of the repository was originally forked from a project in the Udacity repository [build-ml-pipeline-for-short-term-rental-prices](https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices). The instructions of that source project can be found in the file [`Instructions.md`](Instructions.md). If you would like to know more about *why* reproducible ML pipelines matter and *how* the tools used here interact, you can have a look at my [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
 
@@ -22,36 +22,30 @@ Table of contents:
 - [Reproducible Machine Learning Pipeline for Short-Term Rental Price Prediction](#reproducible-machine-learning-pipeline-for-short-term-rental-price-prediction)
   - [Introduction](#introduction)
   - [How to Use This Project](#how-to-use-this-project)
-  - [Dependencies](#dependencies)
+    - [Dependencies](#dependencies)
+    - [How to Run the Pipeline](#how-to-run-the-pipeline)
+    - [How to Modify the Pipeline](#how-to-modify-the-pipeline)
   - [Notes](#notes)
-  - [Tips & Tricks](#tips--tricks)
-    - [Issues](#issues)
+  - [Issues](#issues)
   - [Possible Improvements](#possible-improvements)
   - [Interesting Links](#interesting-links)
   - [Authorship](#authorship)
 
 ## Introduction
 
-Contents:
+The following figure summarizes all the steps/components and the artifacts of the pipeline:
 
-    conda env create
-    cookiecutter
-    single steps/components
-    pre-existing components run from github
-      get_data
-      train_val_test_split
-      test_regression_model
+<p align="center">
+<img src="./images/Reproducible_Pipeline_AirBnB_NYC.png" alt="Reproducible ML Pipeline Diagram" width="600"/>
+</p>
 
-Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
+The final goal of the pipeline is to produce the optimal inference artifact which is able to regress the price of a rented unit given its features.
 
-![Lineage / Graph View of the exported model](images/wandb_graph_view_lineage.png)
+The step related to the Exploratory Data Analysis (EDA) is not part of the re-trainable pipeline, i.e., it needs to be called explicitly; additionally, the component contains research notebooks that are crafted manually to gather insights of the dataset. Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
 
-```bash
-mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
--v 1.0.0 \
--P hydra_options="etl.sample='sample2.csv'"
-```
+Some components and artifacts have been labeled as *remote*. Even though they are locally available in this repository, they are fetched from the original Udacity repository to show that MLflow capability.
 
+The file and folder structure reflects the diagram above:
 
 ```
 .
@@ -109,25 +103,114 @@ mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
 
 ```
 
-![Reproducible ML Pipeline Diagram](images/Reproducible_Pipeline_AirBnB_NYC.png)
+Each step/component has a dedicated folder with the following files:
+
+- `run.py`: The implementation of the step function.
+- `MLproject`: The MLflow project file which executes `run.py` with the proper arguments.
+- `conda.yaml`: The conda environment required by `run.py` which is set by MLflow.
+
+All the components are controlled by the root-level script [`main.py`](main.py); that file executes all the steps in order and with the parameters specified in [`config.yaml`](config.yaml).
 
 ## How to Use This Project
 
-- [`Instructions.md`](Instructions.md)
-- [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
+0. If you're unfamiliar with the tools used in this project, I recommend you to have a look at my [ML pipeline project boilerplate](https://github.com/mxagar/music_genre_classification).
+1. Install the [dependencies](#dependencies).
+2. Run the pipeline as explained in [the dedicated section](#how-to-run-the-pipeline).
+3. You can modify the pipeline following [these guidelines](#how-to-modify-the-pipeline) and having into account the original [`Instructions.md`](Instructions.md). 
 
-## Dependencies
+### Dependencies
+
+In order to set up the main environment from which everything is launched you need to install [conda](https://docs.conda.io/en/latest/) and create a [Weights and Biases](https://wandb.ai/site) account; then, the following sets everything up:
+
+```bash
+# Clone repository
+git clone git@github.com:mxagar/ml_pipeline_rental_prices.git
+cd ml_pipeline_rental_prices
+
+# Create new environment
+conda env create -f environment.yml
+
+# Activate environment
+conda activate nyc_airbnb_dev
+
+# Log in via the web interface
+wandb login
+```
+
+All step/component dependencies are handled by MLflow using the dedicated `conda.yaml` environment definition files.
+
+### How to Run the Pipeline
+
+There are multiple ways of running this pipeline, for instance:
+
+- Local execution or execution from cloned source code of the complete pipeline.
+- Local execution of selected pipeline steps.
+- Remote execution of a release.
+
+In the following, some example commands that show how these approaches work are listed:
+
+```bash
+# Local execution of the entire pipeline
+
+# Step execution: A
+# Step name can be found in main.py
+# Note that any upstream artifacts need to be available
+# This step uses the code in a remote repository
+
+# Step execution: B
+# Step name can be found in main.py
+# Note that any upstream artifacts need to be available
+
+# Execution of a remote release hosted in my repository
+
+# Hyperparameter variation with hydra sweeps
+
+```
+
+Note that any execution generates, among others:
+
+- Auxiliary tracking files and folders that we can ignore: `wandb`, `mlruns`, `artifacts`, etc.
+- Entries in the associated [Weights and Biases project](https://wandb.ai/datamix-ai/nyc_airbnb).
+
+In particular, the [Weights and Biases web interface](https://wandb.ai/datamix-ai/nyc_airbnb) contains extensive information...
+
+As an example, here is a graph view of the lineage of the pipeline, which resembles the figure shown above:
+
+![Lineage / Graph View of the exported model](images/wandb_graph_view_lineage.png)
+
+### How to Modify the Pipeline
+
+    cookiecutter
 
 ## Notes
 
-## Tips & Tricks
+Contents:
 
-### Issues
+    conda env create
+    single steps/components
+    pre-existing components run from github
+      get_data
+      train_val_test_split
+      test_regression_model
+
+Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
+
+
+```bash
+mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
+-v 1.0.0 \
+-P hydra_options="etl.sample='sample2.csv'"
+```
+
+## Issues
 
 - I changed the remote component folder/URL; additionally, we might need to specify the branch with the parameter `version` in the `mlflow.run()` call, because `mlflow` defaults to use `master`.
 - I had to change several `conda.yaml` files to avoid versioning/dependency issues: `protobuf`, etc.
 
 ## Possible Improvements
+
+- [ ] Extend EDA.
+- [ ] Extend Modeling.
 
 ## Interesting Links
 
