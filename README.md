@@ -25,8 +25,7 @@ Table of contents:
     - [Dependencies](#dependencies)
     - [How to Run the Pipeline](#how-to-run-the-pipeline)
     - [How to Modify the Pipeline](#how-to-modify-the-pipeline)
-  - [Notes](#notes)
-  - [Issues](#issues)
+  - [Issues / Notes](#issues--notes)
   - [Possible Improvements](#possible-improvements)
   - [Interesting Links](#interesting-links)
   - [Authorship](#authorship)
@@ -41,9 +40,9 @@ The following figure summarizes all the steps/components and the artifacts of th
 
 The final goal of the pipeline is to produce the optimal inference artifact which is able to regress the price of a rented unit given its features.
 
-The step related to the Exploratory Data Analysis (EDA) is not part of the re-trainable pipeline, i.e., it needs to be called explicitly; additionally, the component contains research notebooks that are crafted manually to gather insights of the dataset. Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
+The step related to the Exploratory Data Analysis (EDA) in light green is not part of the re-trainable pipeline, i.e., it needs to be called explicitly; additionally, the component contains research notebooks that are crafted manually to gather insights of the dataset. Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
 
-Some components and artifacts have been labeled as *remote*. Even though they are locally available in this repository, they are fetched from the original Udacity repository to show that MLflow capability.
+Some components and artifacts have been labeled as *remote*. Even though they are locally available in this repository, they are fetched from the original repository, showing that MLflow capability.
 
 The file and folder structure reflects the diagram above:
 
@@ -105,7 +104,7 @@ The file and folder structure reflects the diagram above:
 
 Each step/component has a dedicated folder with the following files:
 
-- `run.py`: The implementation of the step function.
+- `run.py`: The implementation of the step function/goal.
 - `MLproject`: The MLflow project file which executes `run.py` with the proper arguments.
 - `conda.yaml`: The conda environment required by `run.py` which is set by MLflow.
 
@@ -150,21 +149,40 @@ There are multiple ways of running this pipeline, for instance:
 In the following, some example commands that show how these approaches work are listed:
 
 ```bash
+# Go to the root project level, where main.py is
+cd ml_pipeline_rental_prices
+
 # Local execution of the entire pipeline
+mlflow run . 
 
-# Step execution: A
+# Step execution: Download or get the data
 # Step name can be found in main.py
-# Note that any upstream artifacts need to be available
 # This step uses the code in a remote repository
+mlflow run . -P steps="download"
 
-# Step execution: B
+# Step execution: Clean / pre-process the raw dataset
 # Step name can be found in main.py
 # Note that any upstream artifacts need to be available
+mlflow run . -P steps="basic_cleaning"
+
+# Step execution: data check + segregation
+# Step names can be found in main.py
+# Note that any upstream artifacts need to be available
+# The step data_split uses the code in a remote repository
+mlflow run . -P steps="data_check,data_split"
 
 # Execution of a remote release hosted in my repository
+# Release: 1.0.1
+mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
+-v 1.0.1
 
 # Hyperparameter variation with hydra sweeps
-
+# Step execution: Train the random forest model
+# Step names can be found in main.py
+# Note that any upstream artifacts need to be available
+mlflow run . \
+-P steps=train_random_forest \
+-P hydra_options="modeling.max_tfidf_features=10,15,30 modeling.random_forest.max_features=0.1,0.33,0.5,0.75,1.0 -m"
 ```
 
 Note that any execution generates, among others:
@@ -172,50 +190,64 @@ Note that any execution generates, among others:
 - Auxiliary tracking files and folders that we can ignore: `wandb`, `mlruns`, `artifacts`, etc.
 - Entries in the associated [Weights and Biases project](https://wandb.ai/datamix-ai/nyc_airbnb).
 
-In particular, the [Weights and Biases web interface](https://wandb.ai/datamix-ai/nyc_airbnb) contains extensive information...
+The entries in the [Weights and Biases web interface](https://wandb.ai/datamix-ai/nyc_airbnb) cover extensive information related to each run of a component or uploaded/downloaded artifacts:
 
-As an example, here is a graph view of the lineage of the pipeline, which resembles the figure shown above:
+- Time, duration and resources.
+- Logged information: parameters, metrics, images, etc.
+- Git commit branches.
+- Relationship between components and artifacts.
+- Etc.
+
+As an example, here is a graph view of the lineage of the pipeline, which resembles the pipeline flow diagram shown above:
 
 ![Lineage / Graph View of the exported model](images/wandb_graph_view_lineage.png)
 
 ### How to Modify the Pipeline
 
-    cookiecutter
+We can generate new steps/components easily by creating a new folder under `src/` with the following three files, properly implemented:
 
-## Notes
+- `MLproject`
+- `conda.yaml`
+- `run.py`
 
-Contents:
+Then, we need to add the step and its parameters to the `mlflow` pipeline in [`main.py`](main.py), as it is done with the other steps.
 
-    conda env create
-    single steps/components
-    pre-existing components run from github
-      get_data
-      train_val_test_split
-      test_regression_model
-
-Note that the data processing and modeling are quite simple; the focus of the project lies on the MLOps aspect.
-
+Instead of creating the folder and the files manually, we can use the tool [cookiecutter](https://github.com/cookiecutter/cookiecutter), installed with the general requirements. For that, we run the following command:
 
 ```bash
-mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
--v 1.0.0 \
--P hydra_options="etl.sample='sample2.csv'"
+cookiecutter cookie-mlflow-step -o src
 ```
 
-## Issues
+That prompts a form we need to fill in via the CLI; for instance, if we'd like to create a new component which would train an [XGBoost](https://xgboost.ai) model, we could write this:
+
+```bash
+step_name [step_name]: train_xgboost
+script_name [run.py]: run.py
+job_type [my_step]: train_model
+short_description [My step]: Training of an XGBoost model
+long_description [An example of a step using MLflow and Weights & Biases]: Training of an XGBoost model
+parameters [parameter1,parameter2]: trainval_artifact,val_size,random_seed,stratify_by,xgb_config,max_tfidf_features,output_artifact  
+```
+
+All that creates the component folder with the three files, to be implemented.
+
+## Issues / Notes
+
+There are some deviations from the original [`Instructions.md`](Instructions.md) that might be worth considering:
 
 - I changed the remote component folder/URL; additionally, we might need to specify the branch with the parameter `version` in the `mlflow.run()` call, because `mlflow` defaults to use `master`.
 - I had to change several `conda.yaml` files to avoid versioning/dependency issues: `protobuf`, etc.
 
 ## Possible Improvements
 
-- [ ] Extend EDA.
-- [ ] Extend Modeling.
+- [ ] Extend the Exploratory Data Analysis (EDA) and the Feature Engineering (FE). See my [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
+- [ ] Extend the current data modeling and the hyperparameter tuning.
+- [ ] Try other models than the random forest: create new components/steps for those and compare them.
 
 ## Interesting Links
 
 - [Reproducible ML pipeline boilerplate](https://github.com/mxagar/music_genre_classification).
-- This repository doesn't focus on the techniques for data processing and modeling; if you are interested in those topics, you can visit my  [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
+- This repository doesn't focus on the techniques for data processing and modeling, instead it focuses on the MLOps aspect; if you are interested in the former topics, you can visit my  [Guide on EDA, Data Cleaning and Feature Engineering](https://github.com/mxagar/eda_fe_summary).
 - This project creates an inference pipeline managed with [MLflow](https://www.mlflow.org) and tracked with [Weights and Biases](https://wandb.ai/site); however, it is possible to define a production inference pipeline in a more simple way without the exposure to those 3rd party tools. In [this blog post](https://mikelsagardia.io/blog/machine-learning-production-level.html) I describe how to perform that transformation from research code to production-level code; the associated repository is [customer_churn_production](https://github.com/mxagar/customer_churn_production).
 - If you are interested in more MLOps-related content, you can visit my notes on the [Udacity Machine Learning DevOps Engineering Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821): [mlops_udacity](https://github.com/mxagar/mlops_udacity).
 - If you're interested in such short-term renting price modeling, have a look at my [Analysis and Modelling of the AirBnB Dataset from the Basque Country](https://mikelsagardia.io/blog/airbnb-spain-basque-data-analysis.html).
