@@ -171,11 +171,6 @@ mlflow run . -P steps="basic_cleaning"
 # The step data_split uses the code in a remote repository
 mlflow run . -P steps="data_check,data_split"
 
-# Execution of a remote release hosted in my repository
-# Release: 1.0.1
-mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
--v 1.0.1
-
 # Hyperparameter variation with hydra sweeps
 # Step execution: Train the random forest model
 # Step names can be found in main.py
@@ -183,6 +178,13 @@ mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
 mlflow run . \
 -P steps=train_random_forest \
 -P hydra_options="modeling.max_tfidf_features=10,15,30 modeling.random_forest.max_features=0.1,0.33,0.5,0.75,1.0 -m"
+
+# Execution of a remote release hosted in my repository
+# and use a different dataset/sample from the standard one
+# Release: 1.0.1
+mlflow run https://github.com/mxagar/ml_pipeline_rental_prices.git \
+-v 1.0.1 \
+-P hydra_options="etl.sample='sample2.csv'"
 ```
 
 Note that any execution generates, among others:
